@@ -7,8 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -54,6 +58,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(item.getItemId() == R.id.addItem) {
+            addItem();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    private void addItem() {
+        // Single input value dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Create an edittext and set it to be the builder's view
+        final EditText et = new EditText(this);
+        et.setInputType(InputType.TYPE_CLASS_TEXT);
+        et.setGravity(Gravity.CENTER_HORIZONTAL);
+        builder.setView(et);
+
+        builder.setPositiveButton("OK", (dialog, id) -> {
+            //tv1.setText(et.getText());
+            Toast.makeText(MainActivity.this, "Symbol sent!", Toast.LENGTH_SHORT).show();
+        });
+        builder.setNegativeButton("CANCEL", (dialog, id) -> Toast.makeText(MainActivity.this, "You changed your mind!", Toast.LENGTH_SHORT).show());
+
+        builder.setMessage("Please enter a Stock Symbol:");
+        builder.setTitle("Stock Selection");
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override
