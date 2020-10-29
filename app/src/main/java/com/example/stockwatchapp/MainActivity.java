@@ -1,10 +1,12 @@
 package com.example.stockwatchapp;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -59,8 +61,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onLongClick(View v) {
         int pos = recyclerView.getChildLayoutPosition(v);
         Stock s = stockList.get(pos);
-        Toast.makeText(v.getContext(), "LONG " + s.getSymbol(), Toast.LENGTH_SHORT).show();
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete Stock");
+        builder.setIcon(R.drawable.ic_dialog_delete);
+        builder.setMessage("Delete Stock Symbol " + s.getSymbol() + "?");
+
+        builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                stockList.remove(pos);
+                stockAdapter.notifyItemRemoved(pos);
+                saveData();
+                Toast.makeText(MainActivity.this, "Stock deleted!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(MainActivity.this, "You changed your mind!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
         return false;
+    }
+
+    private void saveData() {
     }
 }
