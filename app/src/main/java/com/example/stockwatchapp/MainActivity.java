@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         swiper = findViewById(R.id.swiper);
-        swiper.setOnRefreshListener(() -> { doRefresh(); });
+        swiper.setOnRefreshListener(this::doRefresh);
 
         // Make some data - just used to fill list
         for (int i = 0; i < 20; i++) {
@@ -67,22 +66,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         builder.setIcon(R.drawable.ic_dialog_delete);
         builder.setMessage("Delete Stock Symbol " + s.getSymbol() + "?");
 
-        builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                stockList.remove(pos);
-                stockAdapter.notifyItemRemoved(pos);
-                saveData();
-                Toast.makeText(MainActivity.this, "Stock deleted!", Toast.LENGTH_SHORT).show();
-            }
+        builder.setPositiveButton("DELETE", (dialog, which) -> {
+            stockList.remove(pos);
+            stockAdapter.notifyItemRemoved(pos);
+            saveData();
+            Toast.makeText(MainActivity.this, "Stock deleted!", Toast.LENGTH_SHORT).show();
         });
 
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(MainActivity.this, "You changed your mind!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        builder.setNegativeButton("CANCEL", (dialog, which) -> Toast.makeText(MainActivity.this, "You changed your mind!", Toast.LENGTH_SHORT).show());
 
         AlertDialog dialog = builder.create();
         dialog.show();
