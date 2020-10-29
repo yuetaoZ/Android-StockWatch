@@ -6,4 +6,5 @@
     <string name="symbol">symbol</string>
     <string name="latestprice">latestPrice</string>
     <string name="priceChangeDirection">▲▼</string>
+    <string name="additem">addItem</string>
 </resources>

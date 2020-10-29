@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        super.setTitle("Stock Watch");
         setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.recycler);
@@ -46,6 +48,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         stockAdapter.notifyDataSetChanged();
         swiper.setRefreshing(false);
         Toast.makeText(this, "List content updated.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_menu, menu);
+        return true;
     }
 
     @Override
