@@ -1,6 +1,8 @@
 package com.example.stockwatchapp;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Make some data - just used to fill list
         for (int i = 0; i < 20; i++) {
-            stockList.add(new Stock());
+            stockList.add(new Stock(String.valueOf(i),String.valueOf(i)));
         }
 
         readJSONData();
@@ -270,6 +272,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int pos = recyclerView.getChildLayoutPosition(v);
         Stock s = stockList.get(pos);
+
+        String url = "https://www.marketwatch.com/investing/stock/" + s.getSymbol();
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
 
         Toast.makeText(v.getContext(), "SHORT " + s.getSymbol(), Toast.LENGTH_SHORT).show();
     }
