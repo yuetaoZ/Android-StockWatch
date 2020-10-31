@@ -7,4 +7,5 @@
     <string name="latestprice">latestPrice</string>
     <string name="priceChangeDirection">▲▼</string>
     <string name="additem">addItem</string>
+    <string name="notes_file">StocksFile.json</string>
 </resources>
