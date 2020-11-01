@@ -1,5 +1,6 @@
 package com.example.stockwatchapp;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,12 +38,20 @@ public class StockAdapter extends RecyclerView.Adapter<StockViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull StockViewHolder holder, int position) {
         Stock stock = stockList.get(position);
+        if(stock.getChange() < 0) {
+            holder.symbol.setTextColor(Color.RED);
+            holder.companyName.setTextColor(Color.RED);
+            holder.latestTradePrice.setTextColor(Color.RED);
+            holder.priceChangeDirection.setTextColor(Color.RED);
+            holder.priceChangeAmount.setTextColor(Color.RED);
+            holder.priceChangePercentage.setTextColor(Color.RED);
+        }
         holder.symbol.setText(stock.getSymbol());
         holder.companyName.setText(stock.getCompanyName());
         holder.latestTradePrice.setText(String.format("%s", stock.getLatestPrice()));
         holder.priceChangeDirection.setText(stock.getChange() >= 0 ? "▲" : "▼");
         holder.priceChangeAmount.setText(String.format("%s", stock.getChange()));
-        holder.priceChangePercentage.setText(String.format("%s", stock.getChangePercent()));
+        holder.priceChangePercentage.setText("(" + String.format("%s", stock.getChangePercent()) + "%)");
     }
 
     @Override
