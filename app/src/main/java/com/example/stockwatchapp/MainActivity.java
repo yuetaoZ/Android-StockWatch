@@ -1,7 +1,6 @@
 package com.example.stockwatchapp;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -68,6 +67,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void doRefresh() {
+        final List<String> updateList = new ArrayList<>();
+
+        for (Stock stock: stockList) {
+            String sym = stock.getSymbol() + "-" + stock.getCompanyName();
+            updateList.add(sym);
+        }
+
+        stockList.clear();
+
+        for (String sym: updateList) {
+            doSelection(sym);
+        }
+
         stockAdapter.notifyDataSetChanged();
         swiper.setRefreshing(false);
         Toast.makeText(this, "List content updated.", Toast.LENGTH_SHORT).show();
@@ -181,8 +193,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         stockList.add(stock);
         stockAdapter.notifyDataSetChanged();
         writeJSONData();
-        Toast.makeText(MainActivity.this, "Stock picked: " + sym, Toast.LENGTH_SHORT).show();
-
     }
 
     private void reportSymbolNotFound(String stockSymbol) {
