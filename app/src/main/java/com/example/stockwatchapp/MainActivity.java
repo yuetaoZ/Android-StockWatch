@@ -2,6 +2,8 @@ package com.example.stockwatchapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -64,18 +66,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         readJSONData();
 
+        networkIsConnected();
     }
 
     private void doRefresh() {
+
+        if(!networkIsConnected()) {
+            swiper.setRefreshing(false);
+            return;
+        }
+
         final List<String> updateList = new ArrayList<>();
 
         for (Stock stock: stockList) {
             String sym = stock.getSymbol() + "-" + stock.getCompanyName();
             updateList.add(sym);
         }
-
         stockList.clear();
-
         for (String sym: updateList) {
             doSelection(sym);
         }
@@ -106,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void addItem() {
+        if(!networkIsConnected()) return;
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         final EditText et = new EditText(this);
@@ -320,6 +329,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
             Log.d(TAG, "readJSONData: " + e.getMessage());
         }
+    }
+
+    private boolean networkIsConnected() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null) {
+            Toast.makeText(this, "Cannot access ConnectivityManager", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+        if (netInfo == null || !netInfo.isConnected()) {
+            reportNoNetwork();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void reportNoNetwork() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("No Network Connection");
+        builder.setMessage("Stocks Cannot Be Updated Without A Network Connection");
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 }
